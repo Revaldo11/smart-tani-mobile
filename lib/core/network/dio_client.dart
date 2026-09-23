@@ -1,8 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:smart_tani_mobile/core/constant/api_constant.dart';
+import 'package:smart_tani_mobile/core/storage/secure_storage_service.dart';
 
 class DioClient {
-  DioClient() {
+  DioClient({required SecureStorageService secureStorage}) {
     dio = Dio(
       BaseOptions(
         baseUrl: ApiConstants.baseUrl,
