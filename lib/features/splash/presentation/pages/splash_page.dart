@@ -22,29 +22,20 @@ class _SplashPageState extends State<SplashPage> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       backgroundColor: AppColors.primary,
-      body: SafeArea(
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: const AssetImage(
+              'assets/images/splash/splash.jpg',
+            ),
+            fit: BoxFit.cover,
+          ),
+        ),
         child: Center(
           child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                'Smart Tani',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 32,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              SizedBox(height: 8),
-              Text(
-                'Bersama Petani, Menuju Panen Lebih Baik',
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-            ],
+            children: const [FlutterLogo(size: 300)],
           ),
         ),
       ),

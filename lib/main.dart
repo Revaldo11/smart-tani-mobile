@@ -46,9 +46,7 @@ Future<void> main() async {
         Provider<PreferenceService>.value(value: preferenceService),
         Provider<DioClient>.value(value: dioClient),
         Provider<AuthRepository>.value(value: authRepository),
-        ChangeNotifierProvider<AuthProvider>(
-          create: (_) => AuthProvider(authRepository),
-        ),
+        ChangeNotifierProvider<AuthProvider>.value(value: authProvider),
       ],
       child: SmartTaniApp(router: router),
     ),

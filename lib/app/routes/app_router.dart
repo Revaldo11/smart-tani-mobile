@@ -17,6 +17,8 @@ GoRouter createRouter({
 
     redirect: (context, state) {
       final status = authProvider.status;
+      print(state);
+      print(status);
 
       final location = state.matchedLocation;
 
@@ -46,7 +48,7 @@ GoRouter createRouter({
       if (location == RouteNames.splash) {
         return hasSeenOnboarding
             ? RouteNames.login
-            : RouteNames.onboarding;
+            : RouteNames.splash;
       }
 
       return null;
