@@ -17,8 +17,6 @@ GoRouter createRouter({
 
     redirect: (context, state) {
       final status = authProvider.status;
-      print(state);
-      print(status);
 
       final location = state.matchedLocation;
 
@@ -48,7 +46,8 @@ GoRouter createRouter({
       if (location == RouteNames.splash) {
         return hasSeenOnboarding
             ? RouteNames.login
-            : RouteNames.splash;
+            : RouteNames
+                  .login; //! DONT FORGET CHANGE THIS IF ONBOARDING READY
       }
 
       return null;
@@ -57,17 +56,17 @@ GoRouter createRouter({
     routes: [
       GoRoute(
         path: RouteNames.splash,
-        builder: (_, __) => const SplashPage(),
+        builder: (_, _) => const SplashPage(),
       ),
 
       GoRoute(
         path: RouteNames.login,
-        builder: (_, __) => const LoginPage(),
+        builder: (_, _) => const LoginPage(),
       ),
 
       GoRoute(
         path: RouteNames.register,
-        builder: (_, __) => const RegisterPage(),
+        builder: (_, _) => const RegisterPage(),
       ),
 
       // onboarding & home ditambahkan
