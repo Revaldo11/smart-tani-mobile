@@ -8,13 +8,17 @@ enum AuthStatus {
   initial,
   loading,
   authenticated,
-  unauthenticated, connectionError,
+  unauthenticated,
 }
 
 class AuthProvider extends ChangeNotifier {
   AuthProvider(this._repository);
 
   final AuthRepository _repository;
+
+  // Form Keys
+  final loginFormKey = GlobalKey<FormState>();
+  final registerFormKey = GlobalKey<FormState>();
 
   // Login
   final loginController = TextEditingController();
@@ -24,13 +28,13 @@ class AuthProvider extends ChangeNotifier {
   final nameController = TextEditingController();
   final emailController = TextEditingController();
   final phoneController = TextEditingController();
-  final registerPasswordController = TextEditingController();
+  final registerPasswordController =
+      TextEditingController();
   final confirmPasswordController = TextEditingController();
 
   AuthStatus _status = AuthStatus.initial;
   UserModel? _user;
   String? _errorMessage;
-  AppException? _error;
 
   bool _loginPasswordVisible = false;
   bool _registerPasswordVisible = false;
@@ -40,40 +44,238 @@ class AuthProvider extends ChangeNotifier {
   AuthStatus get status => _status;
   UserModel? get user => _user;
   String? get errorMessage => _errorMessage;
-  AppException? get error => _error;
 
   bool get isLoading => _status == AuthStatus.loading;
 
   bool get loginPasswordVisible => _loginPasswordVisible;
-  bool get registerPasswordVisible => _registerPasswordVisible;
-  bool get confirmPasswordVisible => _confirmPasswordVisible;
-
+  bool get registerPasswordVisible =>
+      _registerPasswordVisible;
+  bool get confirmPasswordVisible =>
+      _confirmPasswordVisible;
   bool get termsAccepted => _termsAccepted;
 
-  void toggleLoginPassword() {
+  Future<void> submitLogin() async {
+    clearError();
+
+    final isValid =
+        loginFormKey.currentState?.validate() ?? false;
+
+    if (!isValid) {
+      return;
+    }
+
+    _setLoading();
+
+    try {
+      _user = await _repository.login(
+        login: loginController.text.trim(),
+        password: loginPasswordController.text,
+      );
+
+      _status = AuthStatus.authenticated;
+
+      clearLoginForm();
+    } on AppException catch (error) {
+      _status = AuthStatus.unauthenticated;
+      _errorMessage = error.message;
+    }
+
+    notifyListeners();
+  }
+
+  Future<void> submitRegister() async {
+    clearError();
+
+    final isValid =
+        registerFormKey.currentState?.validate() ?? false;
+
+    if (!isValid) {
+      return;
+    }
+
+    if (!_termsAccepted) {
+      _errorMessage =
+          'Anda harus menyetujui Syarat & Ketentuan.';
+
+      notifyListeners();
+      return;
+    }
+
+    _setLoading();
+
+    try {
+      _user = await _repository.register(
+        name: nameController.text.trim(),
+        email: emailController.text.trim(),
+        phone: phoneController.text.trim(),
+        password: registerPasswordController.text,
+        passwordConfirmation:
+            confirmPasswordController.text,
+      );
+
+      _status = AuthStatus.authenticated;
+
+      clearRegisterForm();
+    } on AppException catch (error) {
+      _status = AuthStatus.unauthenticated;
+      _errorMessage = error.message;
+    }
+
+    notifyListeners();
+  }
+
+  // =========================================================
+  // SESSION
+  // =========================================================
+
+  Future<void> initializeSession() async {
+    final hasToken = await _repository.hasToken();
+
+    if (!hasToken) {
+      _user = null;
+      _status = AuthStatus.unauthenticated;
+      notifyListeners();
+      return;
+    }
+
+    try {
+      _user = await _repository.getCurrentUser();
+
+      _status = AuthStatus.authenticated;
+    } catch (_) {
+      await _repository.clearSession();
+
+      _user = null;
+      _status = AuthStatus.unauthenticated;
+    }
+
+    notifyListeners();
+  }
+
+  // =========================================================
+  // LOGIN
+  // =========================================================
+
+  Future<bool> login() async {
+    _setLoading();
+
+    try {
+      _user = await _repository.login(
+        login: loginController.text.trim(),
+        password: loginPasswordController.text,
+      );
+
+      _status = AuthStatus.authenticated;
+      _errorMessage = null;
+
+      clearLoginForm();
+
+      notifyListeners();
+
+      return true;
+    } on AppException catch (error) {
+      _setError(error.message);
+
+      return false;
+    }
+  }
+
+  // =========================================================
+  // REGISTER
+  // =========================================================
+
+  Future<bool> register() async {
+    if (!_termsAccepted) {
+      _errorMessage =
+          'Anda harus menyetujui Syarat & Ketentuan.';
+
+      notifyListeners();
+
+      return false;
+    }
+
+    _setLoading();
+
+    try {
+      _user = await _repository.register(
+        name: nameController.text.trim(),
+        email: emailController.text.trim(),
+        phone: phoneController.text.trim(),
+        password: registerPasswordController.text,
+        passwordConfirmation:
+            confirmPasswordController.text,
+      );
+
+      _status = AuthStatus.authenticated;
+      _errorMessage = null;
+
+      clearRegisterForm();
+
+      notifyListeners();
+
+      return true;
+    } on AppException catch (error) {
+      _setError(error.message);
+
+      return false;
+    }
+  }
+
+  // =========================================================
+  // LOGOUT
+  // =========================================================
+
+  Future<void> logout() async {
+    try {
+      await _repository.logout();
+    } finally {
+      _user = null;
+      _errorMessage = null;
+      _status = AuthStatus.unauthenticated;
+
+      clearForms();
+
+      notifyListeners();
+    }
+  }
+
+  // =========================================================
+  // PASSWORD VISIBILITY
+  // =========================================================
+
+  void toggleLoginPasswordVisibility() {
     _loginPasswordVisible = !_loginPasswordVisible;
+
     notifyListeners();
   }
 
-  void toggleRegisterPassword() {
+  void toggleRegisterPasswordVisibility() {
     _registerPasswordVisible = !_registerPasswordVisible;
+
     notifyListeners();
   }
 
-  void toggleConfirmPassword() {
+  void toggleConfirmPasswordVisibility() {
     _confirmPasswordVisible = !_confirmPasswordVisible;
+
     notifyListeners();
   }
+
+  // =========================================================
+  // TERMS
+  // =========================================================
 
   void setTermsAccepted(bool value) {
     _termsAccepted = value;
+
     notifyListeners();
   }
 
-  String? validateRequired(
-    String? value,
-    String field,
-  ) {
+  // =========================================================
+  // VALIDATION
+  // =========================================================
+
+  String? validateRequired(String? value, String field) {
     if (value == null || value.trim().isEmpty) {
       return '$field wajib diisi.';
     }
@@ -82,16 +284,32 @@ class AuthProvider extends ChangeNotifier {
   }
 
   String? validateEmail(String? value) {
-    if (value == null || value.trim().isEmpty) {
+    final email = value?.trim() ?? '';
+
+    if (email.isEmpty) {
       return 'Email wajib diisi.';
     }
 
-    final emailRegex = RegExp(
-      r'^[^@\s]+@[^@\s]+\.[^@\s]+$',
-    );
+    final regex = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
 
-    if (!emailRegex.hasMatch(value.trim())) {
+    if (!regex.hasMatch(email)) {
       return 'Format email tidak valid.';
+    }
+
+    return null;
+  }
+
+  String? validatePhone(String? value) {
+    final phone = value?.trim() ?? '';
+
+    if (phone.isEmpty) {
+      return 'Nomor HP wajib diisi.';
+    }
+
+    final regex = RegExp(r'^[0-9+]+$');
+
+    if (!regex.hasMatch(phone)) {
+      return 'Format nomor HP tidak valid.';
     }
 
     return null;
@@ -121,127 +339,65 @@ class AuthProvider extends ChangeNotifier {
     return null;
   }
 
-  Future<bool> login() async {
-    _setLoading();
-
-    try {
-      _user = await _repository.login(
-        login: loginController.text.trim(),
-        password: loginPasswordController.text,
-      );
-
-      _status = AuthStatus.authenticated;
-      notifyListeners();
-
-      return true;
-    } on AppException catch (error) {
-      _setError(error.message);
-      return false;
-    }
-  }
-
-  Future<bool> register() async {
-    if (!_termsAccepted) {
-      _errorMessage =
-          'Anda harus menyetujui Syarat & Ketentuan.';
-      notifyListeners();
-
-      return false;
-    }
-
-    _setLoading();
-
-    try {
-      _user = await _repository.register(
-        name: nameController.text.trim(),
-        email: emailController.text.trim(),
-        phone: phoneController.text.trim(),
-        password: registerPasswordController.text,
-        passwordConfirmation:
-            confirmPasswordController.text,
-      );
-
-      _status = AuthStatus.authenticated;
-      notifyListeners();
-
-      return true;
-    } on AppException catch (error) {
-      _setError(error.message);
-      return false;
-    }
-  }
-
-  Future<void> initializeSession() async {
-  final hasToken = await _repository.hasToken();
-
-  if (!hasToken) {
-    _status = AuthStatus.unauthenticated;
-    notifyListeners();
-    return;
-  }
-
-  try {
-    _user = await _repository.getCurrentUser();
-
-    _status = AuthStatus.authenticated;
-  } on AppException catch (error) {
-    if (error.type == AppExceptionType.unauthorized) {
-      await _repository.clearSession();
-
-      _user = null;
-      _status = AuthStatus.unauthenticated;
-    } else if (error.isNetworkError) {
-      _error = error;
-      _status = AuthStatus.connectionError;
-    } else {
-      _error = error;
-      _status = AuthStatus.connectionError;
-    }
-  }
-
-  notifyListeners();
-}
-
-  Future<void> logout() async {
-    await _repository.logout();
-
-    _user = null;
-    _errorMessage = null;
-    _status = AuthStatus.unauthenticated;
-
-    clearForm();
-
-    notifyListeners();
-  }
+  // =========================================================
+  // ERROR
+  // =========================================================
 
   void clearError() {
+    if (_errorMessage == null) return;
+
     _errorMessage = null;
-  }
 
-  void clearForm() {
-    loginController.clear();
-    loginPasswordController.clear();
-
-    nameController.clear();
-    emailController.clear();
-    phoneController.clear();
-    registerPasswordController.clear();
-    confirmPasswordController.clear();
-
-    _termsAccepted = false;
+    notifyListeners();
   }
 
   void _setLoading() {
     _errorMessage = null;
     _status = AuthStatus.loading;
+
     notifyListeners();
   }
 
   void _setError(String message) {
     _errorMessage = message;
     _status = AuthStatus.unauthenticated;
+
     notifyListeners();
   }
+
+  // =========================================================
+  // CLEAR FORM
+  // =========================================================
+
+  void clearLoginForm() {
+    loginController.clear();
+    loginPasswordController.clear();
+
+    _loginPasswordVisible = false;
+  }
+
+  void clearRegisterForm() {
+    nameController.clear();
+    emailController.clear();
+    phoneController.clear();
+
+    registerPasswordController.clear();
+    confirmPasswordController.clear();
+
+    _registerPasswordVisible = false;
+    _confirmPasswordVisible = false;
+
+    _termsAccepted = false;
+  }
+
+  void clearForms() {
+    clearLoginForm();
+    clearRegisterForm();
+  }
+
+  // =========================================================
+  // DISPOSE
+  // =========================================================
 
   @override
   void dispose() {
@@ -251,6 +407,7 @@ class AuthProvider extends ChangeNotifier {
     nameController.dispose();
     emailController.dispose();
     phoneController.dispose();
+
     registerPasswordController.dispose();
     confirmPasswordController.dispose();
 

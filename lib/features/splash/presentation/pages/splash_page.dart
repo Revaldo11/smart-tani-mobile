@@ -63,22 +63,13 @@ class _SplashPageState extends State<SplashPage> {
               child: Column(
                 children: [
                   SizedBox(height: 70),
-                  SizedBox(
-                    width: 200,
-                    child: Image.asset(
-                      'assets/smart_tani.png',
-                      filterQuality: FilterQuality.high,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
                   Expanded(
-                    child: Text(
-                      'Bersama Petani, Menuju\nPanen Lebih Baik',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 14,
-                        letterSpacing: 0.5,
+                    child: SizedBox(
+                      width: 200,
+                      child: Image.asset(
+                        'assets/images/smart_tani_2.png',
+                        filterQuality: FilterQuality.high,
+                        fit: BoxFit.cover,
                       ),
                     ),
                   ),
