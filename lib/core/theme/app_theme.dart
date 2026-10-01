@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'app_colors.dart';
 
@@ -8,6 +9,7 @@ abstract final class AppTheme {
       useMaterial3: true,
       brightness: Brightness.light,
       scaffoldBackgroundColor: AppColors.background,
+      textTheme: GoogleFonts.poppinsTextTheme(),
 
       colorScheme: ColorScheme.fromSeed(
         seedColor: AppColors.primary,
@@ -18,7 +20,7 @@ abstract final class AppTheme {
         backgroundColor: AppColors.background,
         foregroundColor: AppColors.textPrimary,
         elevation: 0,
-        centerTitle: false,
+        centerTitle: true,
       ),
 
       inputDecorationTheme: InputDecorationTheme(

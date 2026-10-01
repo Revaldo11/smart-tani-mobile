@@ -67,6 +67,8 @@ class AuthProvider extends ChangeNotifier {
     _setLoading();
 
     try {
+      await Future.delayed(const Duration(seconds: 5));
+
       _user = await _repository.login(
         login: loginController.text.trim(),
         password: loginPasswordController.text,
@@ -283,6 +285,18 @@ class AuthProvider extends ChangeNotifier {
     return null;
   }
 
+  String? validateLogin(String? value) {
+    final login = value?.trim() ?? '';
+
+    if (login.isEmpty) {
+      return 'Email atau nomor HP wajib diisi.';
+    }
+
+    return login.contains('@')
+        ? validateEmail(login)
+        : validatePhone(login);
+  }
+
   String? validateEmail(String? value) {
     final email = value?.trim() ?? '';
 
@@ -306,7 +320,7 @@ class AuthProvider extends ChangeNotifier {
       return 'Nomor HP wajib diisi.';
     }
 
-    final regex = RegExp(r'^[0-9+]+$');
+    final regex = RegExp(r'^\+?[0-9]{8,15}$');
 
     if (!regex.hasMatch(phone)) {
       return 'Format nomor HP tidak valid.';

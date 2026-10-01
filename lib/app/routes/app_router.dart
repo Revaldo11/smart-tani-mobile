@@ -20,8 +20,7 @@ GoRouter createRouter({
 
       final location = state.matchedLocation;
 
-      if (status == AuthStatus.initial ||
-          status == AuthStatus.loading) {
+      if (status == AuthStatus.initial) {
         return location == RouteNames.splash
             ? null
             : RouteNames.splash;
@@ -47,7 +46,7 @@ GoRouter createRouter({
         return hasSeenOnboarding
             ? RouteNames.login
             : RouteNames
-                  .splash; //! DONT FORGET CHANGE THIS IF ONBOARDING READY
+                  .login; //! DONT FORGET CHANGE THIS IF ONBOARDING READY
       }
 
       return null;

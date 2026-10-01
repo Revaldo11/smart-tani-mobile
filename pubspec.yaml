@@ -43,6 +43,8 @@ dependencies:
   cached_network_image: ^4.0.1
   image_picker: ^1.2.3
   intl: ^0.20.2
+  google_fonts: ^6.3.1
+  flutter_svg: ^2.3.0
 
 dev_dependencies:
   flutter_launcher_icons: ^0.14.4
@@ -72,6 +74,7 @@ flutter:
     - assets/
     - assets/images/
     - assets/images/splash/
+    - assets/icons/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
