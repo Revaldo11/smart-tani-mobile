@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_tani_mobile/app/routes/route_names.dart';
-import 'package:smart_tani_mobile/core/widget/global_snackbar.dart';
+import 'package:smart_tani_mobile/core/widget/app_custom_dialog.dart';
 
 import '../providers/auth_provider.dart';
 import '../widgets/register/register_view.dart';
@@ -15,23 +15,24 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  Future<void> _handleRegisterSubmit(
-    AuthProvider auth,
-  ) async {
-    await auth.submitRegister();
-
-    if (!mounted) return;
-
-    final error = auth.errorMessage;
-
-    if (error != null && error.trim().isNotEmpty) {
-      showGlobalSnackbar(
-        context,
-        title: 'Gagal',
-        subtitle: error,
-        mode: SnackBarMode.failure,
-      );
-    }
+  Future<void> _showRegisterSuccessDialogPreview() async {
+    await showAppCustomDialog<void>(
+      context,
+      title: 'Akun Berhasil Dibuat!',
+      description:
+          'Akun Smart Tani Anda sudah siap. Tambahkan lahan pertama Anda sekarang untuk mulai mengelola aktivitas pertanian.',
+      primaryLabel: 'Tambah Lahan Sekarang',
+      secondaryLabel: 'Lewati untuk Sekarang',
+      barrierDismissible: false,
+      onPrimaryPressed: () {
+        Navigator.of(context).pop();
+      },
+      onSecondaryPressed: () {
+        Navigator.of(context).pop();
+        context.go(RouteNames.login);
+      },
+      imagePath: 'assets/images/sobat_tani.png',
+    );
   }
 
   void _goToLogin(AuthProvider auth) {
@@ -64,7 +65,7 @@ class _RegisterPageState extends State<RegisterPage> {
           auth.toggleConfirmPasswordVisibility,
       onTermsChanged: auth.setTermsAccepted,
       onSubmit: () {
-        _handleRegisterSubmit(auth);
+        _showRegisterSuccessDialogPreview();
       },
       onGoToLogin: () {
         _goToLogin(auth);
