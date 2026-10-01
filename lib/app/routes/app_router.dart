@@ -47,7 +47,7 @@ GoRouter createRouter({
         return hasSeenOnboarding
             ? RouteNames.login
             : RouteNames
-                  .login; //! DONT FORGET CHANGE THIS IF ONBOARDING READY
+                  .splash; //! DONT FORGET CHANGE THIS IF ONBOARDING READY
       }
 
       return null;

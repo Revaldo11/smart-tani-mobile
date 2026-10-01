@@ -34,7 +34,7 @@ class _SplashPageState extends State<SplashPage> {
         decoration: BoxDecoration(
           image: DecorationImage(
             image: const AssetImage(
-              'assets/images/splash/splash.jpg',
+              'assets/images/splash/splash_bg.png',
             ),
             fit: BoxFit.cover,
           ),
@@ -62,19 +62,20 @@ class _SplashPageState extends State<SplashPage> {
             Center(
               child: Column(
                 children: [
-                  SizedBox(height: 70),
                   Expanded(
                     child: SizedBox(
-                      width: 200,
                       child: Image.asset(
-                        'assets/images/smart_tani_2.png',
+                        'assets/images/smart_tani_1.png',
                         filterQuality: FilterQuality.high,
-                        fit: BoxFit.cover,
+                        width: 250,
                       ),
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.only(bottom: 30),
+                    margin: EdgeInsets.only(
+                      bottom: 30,
+                      top: 400,
+                    ),
                     child: Text(
                       'Pertanian yang lebih cerdas\nuntuk masa depan yang lebih baik',
                       textAlign: TextAlign.center,

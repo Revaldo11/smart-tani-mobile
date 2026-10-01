@@ -19,13 +19,19 @@ Future<void> main() async {
 
   const flutterSecureStorage = FlutterSecureStorage();
 
-  final secureStorageService = SecureStorageService(flutterSecureStorage);
+  final secureStorageService = SecureStorageService(
+    flutterSecureStorage,
+  );
 
   final preferenceService = PreferenceService(preferences);
 
-  final dioClient = DioClient(secureStorage: secureStorageService);
+  final dioClient = DioClient(
+    secureStorage: secureStorageService,
+  );
 
-  final authRemoteDataSource = AuthRemoteDataSource(dioClient.dio);
+  final authRemoteDataSource = AuthRemoteDataSource(
+    dioClient.dio,
+  );
 
   final authRepository = AuthRepository(
     remoteDataSource: authRemoteDataSource,
@@ -42,11 +48,19 @@ Future<void> main() async {
   runApp(
     MultiProvider(
       providers: [
-        Provider<SecureStorageService>.value(value: secureStorageService),
-        Provider<PreferenceService>.value(value: preferenceService),
+        Provider<SecureStorageService>.value(
+          value: secureStorageService,
+        ),
+        Provider<PreferenceService>.value(
+          value: preferenceService,
+        ),
         Provider<DioClient>.value(value: dioClient),
-        Provider<AuthRepository>.value(value: authRepository),
-        ChangeNotifierProvider<AuthProvider>.value(value: authProvider),
+        Provider<AuthRepository>.value(
+          value: authRepository,
+        ),
+        ChangeNotifierProvider<AuthProvider>.value(
+          value: authProvider,
+        ),
       ],
       child: SmartTaniApp(router: router),
     ),
