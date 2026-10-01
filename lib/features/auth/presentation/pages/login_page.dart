@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_tani_mobile/app/routes/route_names.dart';
 import 'package:smart_tani_mobile/core/widget/global_snackbar.dart';
-import '../providers/auth_provider.dart';
+import '../providers/login_form_provider.dart';
 import '../widgets/login/login_view.dart';
 
 class LoginPage extends StatefulWidget {
@@ -14,8 +14,10 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  Future<void> _handleLoginSubmit(AuthProvider auth) async {
-    await auth.submitLogin();
+  Future<void> _handleLoginSubmit(
+    LoginFormProvider auth,
+  ) async {
+    await auth.submit();
 
     if (!mounted) return;
 
@@ -42,23 +44,21 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final auth = context.watch<AuthProvider>();
+    final auth = context.watch<LoginFormProvider>();
 
     return LoginView(
-      formKey: auth.loginFormKey,
+      formKey: auth.formKey,
       loginController: auth.loginController,
-      passwordController: auth.loginPasswordController,
+      passwordController: auth.passwordController,
       isLoading: auth.isLoading,
-      isPasswordVisible: auth.loginPasswordVisible,
+      isPasswordVisible: auth.passwordVisible,
       onTogglePasswordVisibility:
-          auth.toggleLoginPasswordVisibility,
+          auth.togglePasswordVisibility,
       onSubmit: () {
         _handleLoginSubmit(auth);
       },
       onValidateLogin: auth.validateLogin,
-      onValidatePassword: (value) {
-        return auth.validateRequired(value, 'Password');
-      },
+      onValidatePassword: auth.validatePassword,
       onForgotPassword: () {
         _showFeatureComingSoon('Fitur lupa password');
       },
@@ -69,7 +69,7 @@ class _LoginPageState extends State<LoginPage> {
         _showFeatureComingSoon('Masuk dengan Apple');
       },
       onGoToRegister: () {
-        auth.clearError();
+        auth.resetFormState();
         context.push(RouteNames.register);
       },
     );

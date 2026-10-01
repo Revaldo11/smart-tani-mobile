@@ -7,7 +7,9 @@ import 'package:smart_tani_mobile/app/routes/app_router.dart';
 import 'package:smart_tani_mobile/core/storage/preference_service.dart';
 import 'package:smart_tani_mobile/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:smart_tani_mobile/features/auth/data/repositories/auth_repository.dart';
-import 'package:smart_tani_mobile/features/auth/presentation/providers/auth_provider.dart';
+import 'package:smart_tani_mobile/features/auth/presentation/providers/auth_session_provider.dart';
+import 'package:smart_tani_mobile/features/auth/presentation/providers/login_form_provider.dart';
+import 'package:smart_tani_mobile/features/auth/presentation/providers/register_form_provider.dart';
 
 import 'core/network/dio_client.dart';
 import 'core/storage/secure_storage_service.dart';
@@ -38,10 +40,20 @@ Future<void> main() async {
     secureStorage: secureStorageService,
   );
 
-  final authProvider = AuthProvider(authRepository);
+  final authSessionProvider = AuthSessionProvider(
+    authRepository,
+  );
+  final loginFormProvider = LoginFormProvider(
+    authRepository,
+    authSessionProvider,
+  );
+  final registerFormProvider = RegisterFormProvider(
+    authRepository,
+    authSessionProvider,
+  );
 
   final router = createRouter(
-    authProvider: authProvider,
+    authSessionProvider: authSessionProvider,
     preferenceService: preferenceService,
   );
 
@@ -58,8 +70,14 @@ Future<void> main() async {
         Provider<AuthRepository>.value(
           value: authRepository,
         ),
-        ChangeNotifierProvider<AuthProvider>.value(
-          value: authProvider,
+        ChangeNotifierProvider<AuthSessionProvider>.value(
+          value: authSessionProvider,
+        ),
+        ChangeNotifierProvider<LoginFormProvider>.value(
+          value: loginFormProvider,
+        ),
+        ChangeNotifierProvider<RegisterFormProvider>.value(
+          value: registerFormProvider,
         ),
       ],
       child: SmartTaniApp(router: router),

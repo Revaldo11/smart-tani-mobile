@@ -1,22 +1,22 @@
 import 'package:go_router/go_router.dart';
 import 'package:smart_tani_mobile/features/auth/presentation/pages/login_page.dart';
 import 'package:smart_tani_mobile/features/auth/presentation/pages/register_page.dart';
+import 'package:smart_tani_mobile/features/auth/presentation/providers/auth_session_provider.dart';
 
 import '../../core/storage/preference_service.dart';
-import '../../features/auth/presentation/providers/auth_provider.dart';
 import '../../features/splash/presentation/pages/splash_page.dart';
 import 'route_names.dart';
 
 GoRouter createRouter({
-  required AuthProvider authProvider,
+  required AuthSessionProvider authSessionProvider,
   required PreferenceService preferenceService,
 }) {
   return GoRouter(
     initialLocation: RouteNames.splash,
-    refreshListenable: authProvider,
+    refreshListenable: authSessionProvider,
 
     redirect: (context, state) {
-      final status = authProvider.status;
+      final status = authSessionProvider.status;
 
       final location = state.matchedLocation;
 

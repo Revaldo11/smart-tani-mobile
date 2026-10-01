@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:smart_tani_mobile/app/routes/route_names.dart';
 import 'package:smart_tani_mobile/core/widget/app_custom_dialog.dart';
 
-import '../providers/auth_provider.dart';
+import '../providers/register_form_provider.dart';
 import '../widgets/register/register_view.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -35,32 +35,32 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  void _goToLogin(AuthProvider auth) {
+  void _goToLogin(RegisterFormProvider auth) {
     auth.clearError();
     context.go(RouteNames.login);
   }
 
   @override
   Widget build(BuildContext context) {
-    final auth = context.watch<AuthProvider>();
+    final auth = context.watch<RegisterFormProvider>();
 
     return RegisterView(
-      formKey: auth.registerFormKey,
+      formKey: auth.formKey,
       nameController: auth.nameController,
       emailController: auth.emailController,
       phoneController: auth.phoneController,
-      passwordController: auth.registerPasswordController,
+      passwordController: auth.passwordController,
       confirmPasswordController:
           auth.confirmPasswordController,
       isLoading: auth.isLoading,
-      isPasswordVisible: auth.registerPasswordVisible,
+      isPasswordVisible: auth.passwordVisible,
       isConfirmPasswordVisible: auth.confirmPasswordVisible,
       termsAccepted: auth.termsAccepted,
       onBack: () {
         _goToLogin(auth);
       },
       onTogglePasswordVisibility:
-          auth.toggleRegisterPasswordVisibility,
+          auth.togglePasswordVisibility,
       onToggleConfirmPasswordVisibility:
           auth.toggleConfirmPasswordVisibility,
       onTermsChanged: auth.setTermsAccepted,

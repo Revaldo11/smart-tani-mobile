@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:smart_tani_mobile/features/auth/presentation/providers/auth_provider.dart';
+import 'package:smart_tani_mobile/features/auth/presentation/providers/auth_session_provider.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -23,7 +23,9 @@ class _SplashPageState extends State<SplashPage> {
         return;
       }
 
-      context.read<AuthProvider>().initializeSession();
+      context
+          .read<AuthSessionProvider>()
+          .initializeSession();
     });
   }
 
