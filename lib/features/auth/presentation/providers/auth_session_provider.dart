@@ -38,6 +38,10 @@ class AuthSessionProvider extends ChangeNotifier {
     try {
       _user = await _repository.getCurrentUser();
       _status = AuthStatus.authenticated;
+    } on AppException {
+      await _repository.clearSession();
+      _user = null;
+      _status = AuthStatus.unauthenticated;
     } catch (_) {
       await _repository.clearSession();
       _user = null;

@@ -1,4 +1,5 @@
 import 'package:go_router/go_router.dart';
+import 'package:smart_tani_mobile/app/pages/main_navigation_page.dart';
 import 'package:smart_tani_mobile/features/auth/presentation/pages/login_page.dart';
 import 'package:smart_tani_mobile/features/auth/presentation/pages/register_page.dart';
 import 'package:smart_tani_mobile/features/auth/presentation/providers/auth_session_provider.dart';
@@ -49,6 +50,14 @@ GoRouter createRouter({
                   .login; //! DONT FORGET CHANGE THIS IF ONBOARDING READY
       }
 
+      final isAuthRoute =
+          location == RouteNames.login ||
+          location == RouteNames.register;
+
+      if (!isAuthRoute) {
+        return RouteNames.login;
+      }
+
       return null;
     },
 
@@ -66,6 +75,11 @@ GoRouter createRouter({
       GoRoute(
         path: RouteNames.register,
         builder: (_, _) => const RegisterPage(),
+      ),
+
+      GoRoute(
+        path: RouteNames.home,
+        builder: (_, _) => const MainNavigationPage(),
       ),
 
       // onboarding & home ditambahkan

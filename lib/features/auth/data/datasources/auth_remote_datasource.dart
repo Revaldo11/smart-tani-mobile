@@ -2,6 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:smart_tani_mobile/features/auth/data/model/auth_response_model.dart';
 import 'package:smart_tani_mobile/features/auth/data/model/user_model.dart';
 
+import '../../../../core/error/app_exception.dart';
+
 class AuthRemoteDataSource {
   AuthRemoteDataSource(this._dio);
 
@@ -39,10 +41,7 @@ class AuthRemoteDataSource {
   }) async {
     final response = await _dio.post<Map<String, dynamic>>(
       '/auth/login',
-      data: {
-        'login': login,
-        'password': password,
-      },
+      data: {'email': login, 'password': password},
     );
 
     final data = response.data?['data'];
@@ -54,19 +53,43 @@ class AuthRemoteDataSource {
 
   Future<UserModel> getCurrentUser() async {
     final response = await _dio.get<Map<String, dynamic>>(
-      '/user',
+      '/auth/me',
     );
 
     final data = response.data?['data'];
 
-    return UserModel.fromJson(
-      data as Map<String, dynamic>,
-    );
+    if (data is! Map<String, dynamic>) {
+      throw const FormatException(
+        'Invalid /auth/me payload: data must be an object.',
+      );
+    }
+
+    final isTokenValid = data['is_token_valid'];
+
+    if (isTokenValid is! bool) {
+      throw const FormatException(
+        'Invalid /auth/me payload: is_token_valid must be a boolean.',
+      );
+    }
+
+    if (!isTokenValid) {
+      throw const AppException(
+        'Sesi Anda telah berakhir. Silakan masuk kembali.',
+        type: AppExceptionType.unauthorized,
+        statusCode: 401,
+      );
+    }
+
+    final userData = data['user'];
+
+    if (userData is Map<String, dynamic>) {
+      return UserModel.fromJson(userData);
+    }
+
+    return UserModel.fromJson(data);
   }
 
   Future<void> logout() async {
-    await _dio.post<void>(
-      '/auth/logout',
-    );
+    await _dio.post<void>('/auth/logout');
   }
 }

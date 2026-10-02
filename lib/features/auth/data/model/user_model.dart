@@ -13,13 +13,24 @@ class UserModel {
   final String? phone;
   final String? avatarUrl;
 
+  static String? _asNullableString(dynamic value) {
+    if (value == null) return null;
+
+    if (value is String) {
+      final trimmed = value.trim();
+      return trimmed.isEmpty ? null : trimmed;
+    }
+
+    return value.toString();
+  }
+
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
       id: json['id'] as String,
       name: json['name'] as String,
       email: json['email'] as String,
-      phone: json['phone'] as String?,
-      avatarUrl: json['avatar_url'] as String?,
+      phone: _asNullableString(json['phone']),
+      avatarUrl: _asNullableString(json['avatar_url']),
     );
   }
 }

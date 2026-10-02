@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:smart_tani_mobile/core/constant/api_constant.dart';
+import 'package:smart_tani_mobile/core/network/interceptors/auth.dart';
 import 'package:smart_tani_mobile/core/storage/secure_storage_service.dart';
 
 class DioClient {
@@ -17,6 +18,8 @@ class DioClient {
         },
       ),
     );
+
+    dio.interceptors.add(AuthInterceptor(secureStorage));
 
     dio.interceptors.add(
       PrettyDioLogger(
