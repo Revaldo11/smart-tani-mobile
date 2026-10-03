@@ -51,22 +51,10 @@ class _MainNavigationPageState
         index: _selectedIndex,
         children: _pages,
       ),
-      floatingActionButtonLocation:
-          FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Color(0xFF3C952C),
-        shape: const CircleBorder(),
-        onPressed: _onCenterActionPressed,
-        child: const Icon(
-          EvaIcons.plus,
-          color: Colors.white,
-        ),
-      ),
       bottomNavigationBar: BottomAppBar(
         height: 68,
         padding: EdgeInsets.zero,
-        shape: const CircularNotchedRectangle(),
-        notchMargin: 8,
+        color: Colors.white,
         child: SizedBox(
           height: 68,
           child: Row(
@@ -89,7 +77,40 @@ class _MainNavigationPageState
                   onTap: () => _onSelect(1),
                 ),
               ),
-              const SizedBox(width: 56),
+              Container(
+                width: 56,
+                height: 56,
+                child: Transform.translate(
+                  offset: const Offset(0, -10),
+                  child: Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      Positioned(
+                        top: -8,
+                        bottom: -8,
+                        left: -8,
+                        right: -8,
+                        child: DecoratedBox(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                      ),
+                      FloatingActionButton(
+                        backgroundColor: Color(0xFF3C952C),
+                        shape: const CircleBorder(),
+                        onPressed: _onCenterActionPressed,
+                        elevation: 0,
+                        child: const Icon(
+                          EvaIcons.plus,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
               Expanded(
                 child: _BottomNavItem(
                   icon: EvaIcons.listOutline,
