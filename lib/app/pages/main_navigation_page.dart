@@ -1,4 +1,6 @@
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:smart_tani_mobile/core/widget/global_snackbar.dart';
 import 'package:smart_tani_mobile/features/activity/presentation/pages/activity_page.dart';
 import 'package:smart_tani_mobile/features/farm/presentation/pages/farm_page.dart';
 import 'package:smart_tani_mobile/features/home/presentation/pages/home_page.dart';
@@ -34,13 +36,12 @@ class _MainNavigationPageState
   }
 
   void _onCenterActionPressed() {
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(
-        const SnackBar(
-          content: Text('Fitur aksi akan segera tersedia.'),
-        ),
-      );
+    showGlobalSnackbar(
+      context,
+      title: 'Fitur Belum Tersedia',
+      subtitle: 'Fitur ini masih dalam pengembangan.',
+      mode: SnackBarMode.info,
+    );
   }
 
   @override
@@ -53,10 +54,17 @@ class _MainNavigationPageState
       floatingActionButtonLocation:
           FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Color(0xFF3C952C),
+        shape: const CircleBorder(),
         onPressed: _onCenterActionPressed,
-        child: const Icon(Icons.add),
+        child: const Icon(
+          EvaIcons.plus,
+          color: Colors.white,
+        ),
       ),
       bottomNavigationBar: BottomAppBar(
+        height: 68,
+        padding: EdgeInsets.zero,
         shape: const CircularNotchedRectangle(),
         notchMargin: 8,
         child: SizedBox(
@@ -65,8 +73,8 @@ class _MainNavigationPageState
             children: [
               Expanded(
                 child: _BottomNavItem(
-                  icon: Icons.home_outlined,
-                  activeIcon: Icons.home,
+                  icon: EvaIcons.homeOutline,
+                  activeIcon: EvaIcons.home,
                   label: 'Beranda',
                   isSelected: _selectedIndex == 0,
                   onTap: () => _onSelect(0),
@@ -76,7 +84,7 @@ class _MainNavigationPageState
                 child: _BottomNavItem(
                   icon: Icons.agriculture_outlined,
                   activeIcon: Icons.agriculture,
-                  label: 'Lahan Saya',
+                  label: 'Lahan',
                   isSelected: _selectedIndex == 1,
                   onTap: () => _onSelect(1),
                 ),
@@ -84,8 +92,8 @@ class _MainNavigationPageState
               const SizedBox(width: 56),
               Expanded(
                 child: _BottomNavItem(
-                  icon: Icons.list_alt_outlined,
-                  activeIcon: Icons.list_alt,
+                  icon: EvaIcons.listOutline,
+                  activeIcon: EvaIcons.list,
                   label: 'Aktivitas',
                   isSelected: _selectedIndex == 2,
                   onTap: () => _onSelect(2),
@@ -93,8 +101,8 @@ class _MainNavigationPageState
               ),
               Expanded(
                 child: _BottomNavItem(
-                  icon: Icons.person_outline,
-                  activeIcon: Icons.person,
+                  icon: EvaIcons.personOutline,
+                  activeIcon: EvaIcons.person,
                   label: 'Profil',
                   isSelected: _selectedIndex == 3,
                   onTap: () => _onSelect(3),

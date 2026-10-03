@@ -37,13 +37,11 @@ class _ProfilePageState extends State<ProfilePage> {
         mode: SnackBarMode.failure,
       );
     } finally {
-      if (!mounted) {
-        return;
+      if (mounted) {
+        setState(() {
+          _isLoggingOut = false;
+        });
       }
-
-      setState(() {
-        _isLoggingOut = false;
-      });
     }
   }
 

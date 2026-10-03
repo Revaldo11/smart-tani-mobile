@@ -21,7 +21,8 @@ GoRouter createRouter({
 
       final location = state.matchedLocation;
 
-      if (status == AuthStatus.initial) {
+      if (status == AuthStatus.initial ||
+          status == AuthStatus.loading) {
         return location == RouteNames.splash
             ? null
             : RouteNames.splash;
