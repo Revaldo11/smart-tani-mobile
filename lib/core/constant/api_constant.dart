@@ -2,6 +2,10 @@ abstract final class ApiConstants {
   static const String baseUrl =
       'http://192.168.1.12:8000/api/v1';
 
+  // Dummy-data switch: endpoints without a backend yet read
+  // assets/dummy/*.json. Set to false once the API exists.
+  static const bool isDummyData = true;
+
   static const Duration connectTimeout = Duration(
     seconds: 30,
   );

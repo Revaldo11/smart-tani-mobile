@@ -11,6 +11,9 @@ class HomeView extends StatelessWidget {
     required this.userName,
     required this.avatarUrl,
     required this.now,
+    required this.farmSection,
+    required this.weatherSection,
+    required this.activitiesSection,
     required this.onNotificationTap,
     required this.onQuickActionTap,
     required this.onTipTap,
@@ -20,6 +23,9 @@ class HomeView extends StatelessWidget {
   final String? userName;
   final String? avatarUrl;
   final DateTime now;
+  final Widget farmSection;
+  final Widget weatherSection;
+  final Widget activitiesSection;
   final VoidCallback onNotificationTap;
   final VoidCallback onQuickActionTap;
   final VoidCallback onTipTap;
@@ -30,71 +36,84 @@ class HomeView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      body: Stack(
-        children: [
-          const _HeroBackground(height: _backgroundHeight),
-          SafeArea(
-            child: ListView(
-              padding: const EdgeInsets.all(AppSpacing.md),
-              children: [
-                HomeHeader(
-                  avatarUrl: avatarUrl,
-                  onNotificationTap: onNotificationTap,
-                ),
-                const SizedBox(height: AppSpacing.md),
-                HomeGreeting(userName: userName, now: now),
-                const SizedBox(height: AppSpacing.lg),
-                // T2 Sawah Utama, T3 Cuaca, T4 Aktivitas
-                // go here once their endpoints exist.
-                QuickActions(onTap: onQuickActionTap),
-                const SizedBox(height: AppSpacing.md),
-                DailyTipCard(now: now, onTap: onTipTap),
-              ],
+      body: SingleChildScrollView(
+        child: Stack(
+          children: [
+            const Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              height: _backgroundHeight,
+              child: _HeroBackground(),
             ),
-          ),
-        ],
+            SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.all(
+                  AppSpacing.md,
+                ),
+                child: Column(
+                  crossAxisAlignment:
+                      CrossAxisAlignment.start,
+                  children: [
+                    HomeHeader(
+                      avatarUrl: avatarUrl,
+                      onNotificationTap: onNotificationTap,
+                    ),
+                    const SizedBox(height: AppSpacing.md),
+                    HomeGreeting(
+                      userName: userName,
+                      now: now,
+                    ),
+                    const SizedBox(height: AppSpacing.lg),
+                    farmSection,
+                    const SizedBox(height: AppSpacing.md),
+                    weatherSection,
+                    const SizedBox(height: AppSpacing.md),
+                    activitiesSection,
+                    const SizedBox(height: AppSpacing.md),
+                    QuickActions(onTap: onQuickActionTap),
+                    const SizedBox(height: AppSpacing.md),
+                    DailyTipCard(now: now, onTap: onTipTap),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
 class _HeroBackground extends StatelessWidget {
-  const _HeroBackground({required this.height});
-
-  final double height;
+  const _HeroBackground();
 
   @override
   Widget build(BuildContext context) {
-    return Positioned(
-      top: 0,
-      left: 0,
-      right: 0,
-      height: height,
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          Image.asset(
-            'assets/images/home_bg.jpg',
-            fit: BoxFit.cover,
-            cacheWidth: 1080,
-          ),
-          const DecoratedBox(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.centerRight,
-                end: Alignment.centerLeft,
-                stops: [0.0, 0.6],
-                tileMode: TileMode.mirror,
-                transform: GradientRotation(3.13 / 4),
-                colors: [
-                  Color(0x00F8FAF8),
-                  AppColors.background,
-                ],
-              ),
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        Image.asset(
+          'assets/images/home_bg.jpg',
+          fit: BoxFit.cover,
+          cacheWidth: 1080,
+        ),
+        const DecoratedBox(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.centerRight,
+              end: Alignment.centerLeft,
+              stops: [0.0, 0.6],
+              tileMode: TileMode.mirror,
+              transform: GradientRotation(3.13 / 4),
+              colors: [
+                Color(0x00F8FAF8),
+                AppColors.background,
+              ],
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

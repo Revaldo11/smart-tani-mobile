@@ -1,0 +1,13 @@
+{
+  "data": {
+    "location": "Sukamaju, Jawa Barat",
+    "temperature": 29,
+    "condition": "Cerah Berawan",
+    "condition_code": "partly_cloudy",
+    "humidity": 74,
+    "rain_chance": 20,
+    "wind_speed": 8,
+    "advice_title": "Hujan diperkirakan pukul 16:00.",
+    "advice_detail": "Sebaiknya lakukan pemupukan sebelum pukul 14:00."
+  }
+}

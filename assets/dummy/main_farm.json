@@ -1,0 +1,16 @@
+{
+  "data": {
+    "id": 1,
+    "name": "Sawah Utama",
+    "area": 1.2,
+    "area_unit": "ha",
+    "photo_url": null,
+    "active_season": {
+      "id": 1,
+      "crop_name": "Padi",
+      "variety": "Ciherang",
+      "planting_date": "2026-10-01",
+      "health_status": "good"
+    }
+  }
+}
