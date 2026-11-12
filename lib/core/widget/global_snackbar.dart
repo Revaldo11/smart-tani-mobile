@@ -79,7 +79,7 @@ void showGlobalSnackbar(
                   style: theme.textTheme.bodySmall
                       ?.copyWith(
                         color: palette.secondary,
-                        fontSize: 14,
+                        fontSize: 12,
                         fontWeight: FontWeight.w500,
                       ),
                 ),

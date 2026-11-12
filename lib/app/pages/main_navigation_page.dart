@@ -163,7 +163,13 @@ class _BottomNavItem extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(isSelected ? activeIcon : icon, size: 22),
+            Icon(
+              isSelected ? activeIcon : icon,
+              size: 22,
+              color: isSelected
+                  ? theme.primaryColor
+                  : theme.iconTheme.color,
+            ),
             const SizedBox(height: 4),
             Text(
               label,
