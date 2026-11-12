@@ -1,6 +1,6 @@
 abstract final class ApiConstants {
   static const String baseUrl =
-      'http://0.0.0.0:8000/api/v1';
+      'http://192.168.1.12:8000/api/v1';
 
   static const Duration connectTimeout = Duration(
     seconds: 30,

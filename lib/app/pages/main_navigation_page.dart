@@ -77,7 +77,7 @@ class _MainNavigationPageState
                   onTap: () => _onSelect(1),
                 ),
               ),
-              Container(
+              SizedBox(
                 width: 56,
                 height: 56,
                 child: Transform.translate(
