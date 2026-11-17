@@ -11,6 +11,11 @@ abstract final class AppTheme {
       scaffoldBackgroundColor: AppColors.background,
       textTheme: GoogleFonts.poppinsTextTheme(),
 
+      iconTheme: const IconThemeData(
+        size: 24.0,
+        color: Colors.black87,
+      ),
+
       colorScheme: ColorScheme.fromSeed(
         seedColor: AppColors.primary,
         brightness: Brightness.light,

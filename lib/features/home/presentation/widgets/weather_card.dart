@@ -89,7 +89,7 @@ class WeatherCard extends StatelessWidget {
         Row(
           children: [
             const Icon(
-              Icons.calendar_today_outlined,
+              Icons.calendar_month_outlined,
               size: 18,
               color: AppColors.primary,
             ),

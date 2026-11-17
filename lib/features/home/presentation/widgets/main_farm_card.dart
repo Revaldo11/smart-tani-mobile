@@ -107,12 +107,10 @@ class MainFarmCard extends StatelessWidget {
                     child: Row(
                       children: [
                         if (season != null) ...[
-                          Expanded(
-                            child: _Stat(
-                              label: 'Umur tanaman',
-                              value:
-                                  '${season.ageInDays(now)} hari',
-                            ),
+                          _Stat(
+                            label: 'Umur tanaman',
+                            value:
+                                '${season.ageInDays(now)} hari',
                           ),
                           const VerticalDivider(
                             width: AppSpacing.md,
@@ -128,7 +126,7 @@ class MainFarmCard extends StatelessWidget {
                     ),
                   ),
                   if (season != null) ...[
-                    const SizedBox(height: AppSpacing.sm),
+                    const SizedBox(height: AppSpacing.md),
                     FarmStatusChip(
                       status: season.healthStatus,
                     ),

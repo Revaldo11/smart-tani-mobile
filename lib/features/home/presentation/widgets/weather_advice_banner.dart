@@ -29,9 +29,10 @@ class WeatherAdviceBanner extends StatelessWidget {
           padding: const EdgeInsets.all(AppSpacing.sm),
           child: Row(
             children: [
-              const Icon(
-                Icons.water_drop_outlined,
-                color: AppColors.primary,
+              Image.asset(
+                'assets/icons/icon_rain.png',
+                width: 40,
+                height: 40,
               ),
               const SizedBox(width: AppSpacing.sm),
               Expanded(

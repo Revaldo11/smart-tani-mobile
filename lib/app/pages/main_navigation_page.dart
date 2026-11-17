@@ -1,5 +1,5 @@
-import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:smart_tani_mobile/core/widget/global_snackbar.dart';
 import 'package:smart_tani_mobile/features/activity/presentation/pages/activity_page.dart';
 import 'package:smart_tani_mobile/features/farm/presentation/pages/farm_page.dart';
@@ -61,8 +61,8 @@ class _MainNavigationPageState
             children: [
               Expanded(
                 child: _BottomNavItem(
-                  icon: EvaIcons.homeOutline,
-                  activeIcon: EvaIcons.home,
+                  icon: FontAwesomeIcons.house,
+                  activeIcon: FontAwesomeIcons.solidHouse,
                   label: 'Beranda',
                   isSelected: _selectedIndex == 0,
                   onTap: () => _onSelect(0),
@@ -70,8 +70,8 @@ class _MainNavigationPageState
               ),
               Expanded(
                 child: _BottomNavItem(
-                  icon: Icons.agriculture_outlined,
-                  activeIcon: Icons.agriculture,
+                  icon: FontAwesomeIcons.tractor,
+                  activeIcon: FontAwesomeIcons.tractor,
                   label: 'Lahan',
                   isSelected: _selectedIndex == 1,
                   onTap: () => _onSelect(1),
@@ -102,9 +102,12 @@ class _MainNavigationPageState
                         shape: const CircleBorder(),
                         onPressed: _onCenterActionPressed,
                         elevation: 0,
-                        child: const Icon(
-                          EvaIcons.plus,
+                        child: FaIcon(
+                          FontAwesomeIcons.plus,
                           color: Colors.white,
+                          size:
+                              IconTheme.of(context).size ??
+                              15,
                         ),
                       ),
                     ],
@@ -113,8 +116,8 @@ class _MainNavigationPageState
               ),
               Expanded(
                 child: _BottomNavItem(
-                  icon: EvaIcons.listOutline,
-                  activeIcon: EvaIcons.list,
+                  icon: FontAwesomeIcons.list,
+                  activeIcon: FontAwesomeIcons.list,
                   label: 'Aktivitas',
                   isSelected: _selectedIndex == 2,
                   onTap: () => _onSelect(2),
@@ -122,8 +125,8 @@ class _MainNavigationPageState
               ),
               Expanded(
                 child: _BottomNavItem(
-                  icon: EvaIcons.personOutline,
-                  activeIcon: EvaIcons.person,
+                  icon: FontAwesomeIcons.user,
+                  activeIcon: FontAwesomeIcons.user,
                   label: 'Profil',
                   isSelected: _selectedIndex == 3,
                   onTap: () => _onSelect(3),
@@ -146,8 +149,8 @@ class _BottomNavItem extends StatelessWidget {
     required this.onTap,
   });
 
-  final IconData icon;
-  final IconData activeIcon;
+  final FaIconData icon;
+  final FaIconData activeIcon;
   final String label;
   final bool isSelected;
   final VoidCallback onTap;
@@ -163,9 +166,11 @@ class _BottomNavItem extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
+            FaIcon(
               isSelected ? activeIcon : icon,
-              size: 22,
+              size: MediaQuery.sizeOf(context).width >= 600
+                  ? 28
+                  : 24,
               color: isSelected
                   ? theme.primaryColor
                   : theme.iconTheme.color,
